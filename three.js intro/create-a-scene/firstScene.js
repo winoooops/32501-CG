@@ -35,7 +35,7 @@ document.body.appendChild(renderer.domElement)
 
 // create and add the cube 
 const geometry = new THREE.BoxGeometry() // contains all the points and fill of the cube 
-const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
+const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true })
 let cube = new THREE.Mesh(geometry, material) // Mesh takes a geometry and applies a material into it
 scene.add(cube)
 cube.position.set(1, 1, 1)
@@ -58,13 +58,32 @@ camera.lookAt(0, 0, 1)
  * Create a loop that causes the renderer to draw the scene everytime the screen is refreshed(60hz by default)
  */
 function animate() {
-    console.log("your first: ", cube) // why I can not have access of this???????????     
+    renderer.render(scene, camera) // acturally render the scene with objects
+    rotation()
     requestAnimationFrame(animate) // better than setInterval() for seveal reasons such as it wil automatically pauses when the 
-    renderer.render(scene, camera) //
+}
+
+
+// const controls = new THREE.OrbitControls(camera, renderer.domElement)
+
+function rotation()  {
     tetrahedron.rotation.x += 0.01
     tetrahedron.rotation.y += 0.01
-
     cube.rotation.x -= 0.05
-    console.log("second try:", cube)
 }
+
+
+function resizeWin() {
+    // 1. reset the renderer everytime being called
+    renderer.setSize(window.innerWidth, window.innerHeight)
+    // 2 camera listen the aspect ratio change
+    camera.aspect = window.innerWidth / window.innerHeight 
+    // 3 update 
+    camera.updateProjectionMatrix() 
+    // 4 rerender 
+    renderer.render(scene, camera)
+}
+window.addEventListener('resize', resizeWin )
+
+
 animate() 
