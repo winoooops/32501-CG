@@ -31,17 +31,19 @@ var render = function () {
 var createScene = function() {
     for(i = 0; i < n ; i++ ) {
         //all the trasformation are 4*4 matrix
-        var newCube = createCube(i)
-        scene.add( newCube )
+        // var newCube = createCube(i)
+        // scene.add( newCube )
+        createCube(i)
     }
 }
 
 createScene() 
 
-function createCube( index ) {
-    var rot2 = new THREE.Matrix4() 
-    var sca = new THREE.Matrix4() 
+function createCube( index, cb ) {
+    // all the rotation and translation are Matrix of size 4
     var rot = new THREE.Matrix4() 
+    var rot2 = new THREE.Matrix4() 
+    var sca = new THREE.Matrix4() // scale 
     var tra = new THREE.Matrix4() 
     var combined = new THREE.Matrix4() 
 
@@ -69,7 +71,7 @@ function createCube( index ) {
     cubes[index] = new THREE.Mesh(geometry, material)
     // apply the transformation 
     cubes[index].applyMatrix( combined )
-    return cubes[index]
+    scene.add( cubes[index] )
 }
 
 /***************************************
