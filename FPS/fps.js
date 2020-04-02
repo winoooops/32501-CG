@@ -12,8 +12,8 @@ var controls = new THREE.PointerLockControls( camera )
 controls.enabled = true // otherwise the camera can't be rotated 
 scene.add( controls.getObject() ) // need to add FPS controls in the scene first 
 var stats = { }
-
-
+var bounce = { }
+var ballMesh 
 
 
 /***************************************************
@@ -22,18 +22,29 @@ var stats = { }
 
 var init = function () {
 
-    var start = new THREE.Vector3(0,0,0)
-    camera.position.set( start.x, start.y, start.z) 
-    var desti = new THREE.Vector3(0,0,1)
-    camera.lookAt( desti.x, desti.y, desti.z) 
+    // var start = new THREE.Vector3(0,0,0)
+    camera.position.set(2,3,5) 
+    // var desti = new THREE.Vector3(0,0,1)
+    camera.lookAt( scene.position ) 
 
-    var geometry = new THREE.BoxGeometry(100,0.1,100,32,1,32) // the ground
+    var planeGeometry = new THREE.PlaneGeometry(5,10,5,10) // the ground
     var material = new THREE.MeshBasicMaterial({ 
         color: 0x00ff00, 
         wireframe: true
     })
-    var groundMesh = new THREE.Mesh(geometry, material)
+    
+    var groundMesh = new THREE.Mesh(planeGeometry, material)
+    groundMesh.rotation.x = -Math.PI/2
     scene.add( groundMesh )
+
+
+    // create the ball 
+
+    var ballGeometry = new THREE.SphereGeometry(0.5,16,8)
+    ballMesh = new THREE.Mesh(ballGeometry, material )
+
+    scene.add(ballMesh)
+
 
     window.addEventListener('resize', resizeWin )
 
@@ -42,6 +53,13 @@ var init = function () {
         direction: new THREE.Vector3(), //3D vector
         prev: performance.now() // performance.now() method returns a DOMHighResTimeStamp, measured in milliseconds.
     }
+
+    bounce = {
+        clock: new THREE.Clock(), 
+        time: 0, 
+        delta: 0 
+    }
+    
     document.body.appendChild( renderer.domElement)
 }
 
@@ -152,6 +170,13 @@ var geiWoPa = function () {
        updatePos() 
     }   
     
+
+    bounce.delta = bounce.clock.getDelta() 
+    bounce.time += bounce.delta 
+    ballMesh.rotation.x = bounce.time *4 
+    ballMesh.position.y = 0.5 + Math.abs( Math.sin( bounce.time*3)) * 2
+    ballMesh.position.z = Math.cos(bounce.time) * 4  
+
     renderer.render( scene, camera )
     
 
