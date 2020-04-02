@@ -9,6 +9,7 @@ renderer.setPixelRatio( window.devicePixelRatio )
 document.body.appendChild( renderer.domElement)
 var scene  = new THREE.Scene() 
 var controls = new THREE.PointerLockControls( camera, renderer.domElement ) 
+controls.enabled = true // otherwise the camera can't be rotated 
 scene.add( controls.getObject() ) // need to add FPS controls in the scene first 
 var stats = { }
 
@@ -148,7 +149,7 @@ var geiWoPa = function () {
     requestAnimationFrame( geiWoPa ) // recursively update itself
     // better than setInterval() for seveal reasons such as it wil automatically pauses in some cases 
     
-    if( stats.controlsEnabled == true ) {
+    if( controls.enabled == true ) {
        updatePos() 
     }   
     
