@@ -6,9 +6,9 @@ var camera  = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHe
 var renderer = new THREE.WebGLRenderer( { antialias: true } )
 renderer.setSize( window.innerWidth, window.innerHeight )
 renderer.setPixelRatio( window.devicePixelRatio )
-document.body.appendChild( renderer.domElement)
+
 var scene  = new THREE.Scene() 
-var controls = new THREE.PointerLockControls( camera, renderer.domElement ) 
+var controls = new THREE.PointerLockControls( camera ) 
 controls.enabled = true // otherwise the camera can't be rotated 
 scene.add( controls.getObject() ) // need to add FPS controls in the scene first 
 var stats = { }
@@ -27,23 +27,22 @@ var init = function () {
     var desti = new THREE.Vector3(0,0,1)
     camera.lookAt( desti.x, desti.y, desti.z) 
 
-    var geometry = new THREE.PlaneGeometry(100, 100, 50, 50) // the ground
+    var geometry = new THREE.BoxGeometry(100,0.1,100,32,1,32) // the ground
     var material = new THREE.MeshBasicMaterial({ 
         color: 0x00ff00, 
         wireframe: true
     })
     var groundMesh = new THREE.Mesh(geometry, material)
-    groundMesh.rotateX(-Math.PI / 2 )
     scene.add( groundMesh )
 
     window.addEventListener('resize', resizeWin )
 
     stats = {
-        controlsEnabled: true, 
         velocity: new THREE.Vector3(), // 3D vector
         direction: new THREE.Vector3(), //3D vector
         prev: performance.now() // performance.now() method returns a DOMHighResTimeStamp, measured in milliseconds.
     }
+    document.body.appendChild( renderer.domElement)
 }
 
 var render = function () {
