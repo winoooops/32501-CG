@@ -5,6 +5,8 @@
 var camera  = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
 var renderer = new THREE.WebGLRenderer( )
 renderer.setSize( window.innerWidth, window.innerHeight )
+var controls = new THREE.OrbitControls( camera );
+
 var scene  = new THREE.Scene() 
 var cubes = [] // craete an array of cubes
 var n = 36
@@ -26,6 +28,8 @@ var init = function () {
 
 var render = function () {
     renderer.render(scene, camera)
+    controls.update() 
+    requestAnimationFrame(render)
 }
 
 var createScene = function() {
@@ -49,19 +53,16 @@ function createCube( index, cb ) {
 
     // scala matrix to disrot the cube to tile elongated 
     sca.makeScale(0.5,3,1.5)
-    
-
     rot2.makeRotationZ( index*(Math.PI/n) )
-
     tra.makeTranslation(10,0,0)
-
     rot.makeRotationY( index*(2*Math.PI/n ) )
-
+    
+    
     combined.multiply( rot )
     combined.multiply( tra )
     combined.multiply( rot2 )
     combined.multiply( sca )
-
+    
     // create cube
     var geometry = new THREE.BoxGeometry(1,1,1)
     var material = new THREE.MeshBasicMaterial({
